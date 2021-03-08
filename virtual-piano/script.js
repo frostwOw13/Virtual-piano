@@ -11,6 +11,17 @@ const playAudio = function (src) {
     audio.play();
 };
 
+const playingSound = function (e, key) {
+    if (isDown) {
+        if(e.target.classList.contains('piano-key')) {
+            key.classList.add('piano-key-active');
+            const note = e.target.dataset.note;
+            const src = `assets/audio/${note}.mp3`;
+            playAudio(src);
+        };
+    }
+}
+
 // Switch to letters
 btnLetters.addEventListener('click', (e) => {
     pianoKeys.forEach(key => {
@@ -35,30 +46,17 @@ let isDown = true;
 pianoKeys.forEach(key => {
     key.addEventListener('mousedown',(event) => {
         isDown = true;
-        if (isDown) {
-            if(event.target.classList.contains('piano-key')) {
-                key.classList.add('piano-key-active');
-                const note = event.target.dataset.note;
-                const src = `assets/audio/${note}.mp3`;
-                playAudio(src);
-            };
-        }
-        pianoKeys.forEach(key1 => {
-            key1.addEventListener('mouseover', e => {
-                if (isDown) {
-                    if(e.target.classList.contains('piano-key')) {
-                        key1.classList.add('piano-key-active');
-                        const note1 = e.target.dataset.note;
-                        const src1 = `assets/audio/${note1}.mp3`;
-                        playAudio(src1);
-                    };
-                }
-            });
-            key1.addEventListener('mouseout', e => {
-                key1.classList.remove('piano-key-active');
+
+        playingSound(event, key)
+
+        pianoKeys.forEach(key => {
+            key.addEventListener('mouseover', e => playingSound(e, key))
+            key.addEventListener('mouseout', e => {
+                key.classList.remove('piano-key-active');
             });
         });
     });
+
     window.addEventListener('mouseup', e => {
         key.classList.remove('piano-key-active');
         isDown = false;
@@ -77,6 +75,9 @@ window.addEventListener('keydown', (e) => {
             const src = `assets/audio/${note}.mp3`;
             playAudio(src);
         };
+        key.addEventListener('keyup', e => {
+            key.classList.remove('piano-key-active');
+        });
     });
 });
 
