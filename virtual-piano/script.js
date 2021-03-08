@@ -1,6 +1,7 @@
 const pianoKeys = document.querySelectorAll('.piano-key');
 const btnLetters = document.querySelector('.btn-letters');
 const btnNotes = document.querySelector('.btn-notes');
+const btnFullscreen = document.querySelector('.fullscreen');
 
 // FUNCTION: Playing sounds
 const playAudio = function (src) {
@@ -77,4 +78,24 @@ window.addEventListener('keydown', (e) => {
             playAudio(src);
         };
     });
+});
+
+// Fullscreen API
+const getFullscreenElement = function () {
+    return document.fullscreenElement  // for Chrome
+        || document.webkitFullscreenElement // for Opera
+        || document.mozFullscreenElement // for Mozilla
+        || document.msFullscreenElement   // for IE or Edge
+}
+
+const toggleFullscreen = function () {
+    if (getFullscreenElement()) {
+        document.exitFullscreen();
+    } else {
+        document.documentElement.requestFullscreen().catch(console.log)
+    }
+}
+
+btnFullscreen.addEventListener('click', e => {
+    toggleFullscreen();
 });
